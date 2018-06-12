@@ -21,7 +21,6 @@ def part1
     headers = data[0].keys
     f.puts(headers.join("|"))
     data.each do |entry|
-      entry['Comment'] = "\"" + entry['Comment'] + "\""
       f.puts entry.values.join("|")
     end
   end
@@ -35,9 +34,10 @@ def part2(selected_fields)
       revised_dataset = entry.select {|i| selected_fields.include?(i)}
       ordered_dataset = revised_dataset.slice(*selected_fields)
 
-      #Modify Comment to include quotation marks
-      ordered_dataset['Comment'] = "\"" + ordered_dataset['Comment'] + "\""
-
+      # Escaping the delimiters
+      if ordered_dataset['Comment'].include?("|")
+        ordered_dataset['Comment'] = ("\"" + ordered_dataset['Comment'] + "\"")
+      end
       #Modify Date format to YYMMDD
       ordered_dataset['Date'] = Date.parse(ordered_dataset['Date']).strftime('%y%m%d')
 
